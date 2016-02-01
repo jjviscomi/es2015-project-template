@@ -1,5 +1,7 @@
 import gulp        from 'gulp';
 import replace     from 'gulp-ext-replace';
+import stripDebug  from 'gulp-strip-debug';
+import vinylPaths  from 'vinyl-paths';
 import del         from 'del';
 import fs          from 'fs';
 import gulpUtil    from 'gulp-util';
