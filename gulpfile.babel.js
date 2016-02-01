@@ -1,4 +1,6 @@
 import gulp        from 'gulp';
+import gif      from 'gulp-if';
+import gmatch      from 'gulp-match';
 import replace     from 'gulp-ext-replace';
 import stripDebug  from 'gulp-strip-debug';
 import vinylPaths  from 'vinyl-paths';
@@ -20,60 +22,62 @@ import uglify      from 'gulp-uglify';
 
 const settings = JSON.parse(fs.readFileSync('./package.json'));
 
+const testHelpersCondition = (file) => {
+  return gmatch(file, 'test/helpers/*.js');
+};
+
 gulp.task('running', () => {
-  return gulpUtil.log('Gulp is running!')
+  return gulpUtil.log('Gulp is running!');
 });
 
-gulp.task('lint', function () {
-    // ESLint ignores files with "node_modules" paths.
-    // So, it's best to have gulp ignore the directory as well.
-    // Also, Be sure to return the stream from the task;
-    // Otherwise, the task may end before the stream has finished.
-    return gulp.src(['src/**/*.js', 'tests/*.spec.js', 'tests/helpers/*.js', '!libs/**', '!node_modules/**'])
-        // eslint() attaches the lint output to the "eslint" property
-        // of the file object so it can be used by other modules.
-        .pipe(eslint())
-        // eslint.format() outputs the lint results to the console.
-        // Alternatively use eslint.formatEach() (see Docs).
-        .pipe(eslint.format())
-        // To have the process exit with an error code (1) on
-        // lint error, return the stream and pipe to failAfterError last.
-        .pipe(eslint.failAfterError());
+gulp.task('testHelpers', () => {
+  return gulp.src('tests/helpers/*.js')
+    .pipe(gif(testHelpersCondition, eslint()))
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError())
+    .pipe(jscs())
+    .pipe(jscs.reporter());
+});
+
+gulp.task('lint', () => {
+  return gulp.src(['src/**/*.js', 'tests/*.spec.js', '!libs/**', '!node_modules/**'])
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError());
 });
 
 gulp.task('jscs', () => {
-  return gulp.src(['src/**/*.js', 'tests/*.spec.js', 'tests/helpers/*.js'])
+  return gulp.src(['src/**/*.js', 'tests/*.spec.js'])
       .pipe(jscs())
       .pipe(jscs.reporter());
 });
 
-gulp.task('test', ['lint', 'jscs'], (done) => {
+gulp.task('test', ['testHelpers', 'lint', 'jscs'], (done) => {
   return new karma.Server({
     configFile: __dirname + '/karma.conf.js',
-    singleRun: true
+    singleRun: true,
   }, done).start();
 });
 
 gulp.task('compile', ['test'], () => {
-    return gulp.src(['src/**/*.js'])
-        .pipe(sourcemaps.init())
-        .pipe(babel({
-            presets: ['es2015']
-        }))
-        .pipe(concat(settings.main))
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest('dist/development'));
+  return gulp.src(['src/**/*.js'])
+    .pipe(sourcemaps.init())
+    .pipe(babel({
+      presets: ['es2015'],
+    }))
+    .pipe(concat(settings.main))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('dist/development'));
 });
 
 gulp.task('clean', () => {
-	return gulp.src('docs/*', {read: false})
+  return gulp.src('docs/*', { read: false })
     .pipe(vinylPaths(del))
     .pipe(stripDebug())
     .pipe(gulp.dest('docs'));
 });
 
 gulp.task('docs', ['clean'], () => {
-  console.log("DOCS::: ", arguments.length);
   return gulp.src('src/**/*.js')
     .pipe(yuidoc.parser())
     .pipe(yuidoc.reporter())
