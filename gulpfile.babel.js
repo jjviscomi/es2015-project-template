@@ -1,9 +1,8 @@
 import gulp        from 'gulp';
 import replace     from 'gulp-ext-replace';
-import clean       from 'gulp-clean';
+import del         from 'del';
 import fs          from 'fs';
 import gulpUtil    from 'gulp-util';
-import watch       from 'gulp-watch';
 import jscs        from 'gulp-jscs';
 import eslint      from 'gulp-eslint';
 import karma       from 'karma';
@@ -62,8 +61,10 @@ gulp.task('compile', ['test'], () => {
 });
 
 gulp.task('clean', function () {
-	return gulp.src('docs', {read: false})
-		.pipe(clean());
+	return gulp.src('docs/*', {read: false})
+    .pipe(vinylPaths(del))
+    .pipe(stripDebug())
+    .pipe(gulp.dest('dist'));
 });
 
 gulp.task('docs', ['clean'], () => {
