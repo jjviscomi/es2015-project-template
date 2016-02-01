@@ -41,3 +41,23 @@
 |
 |- /package.json
 ```
+
+# Build Steps & Info
+
+### Linting 
+  The first step in the build process is passing your source files `'src/**/*.js', 'tests/*.spec.js', 'tests/helpers/*.js'` through [ESLint](http://eslint.org/). It only has a basic config located at `/.eslintrc`.
+  
+### Style Guidline & Presets
+  The next step is the [JavaScript Code & Style](http://jscs.info/) we are using the presets as defined by [AirBnB](https://github.com/airbnb/javascript) while they are strict they have been adopted widley by the industry.
+  
+### Testing With Karma & Jasmine
+  The next step applies the tests in `'tests/*.spec.js'`, it does this by using the [Karma](https://karma-runner.github.io) Server to spin up a [PhantomJS](http://phantomjs.org/) environment and run your [Jasmine](http://jasmine.github.io/) tests. You should have well covered code, and all new code must have a test in order to be pulled in.
+
+### Transcompiling with Babel (ES2015 preset)
+[Gulp](http://gulpjs.com/) the prefered build system / task runner is already configured to transcompile down to js. It uses [Babel](http://babeljs.io/docs/learn-es2015/) please check it out if you are not familiar with it. This step also concats all the files specified in `'src/**/*.js'` to `/dist/development/{package.json.main}`, so make sure you update `main`.
+
+### YUIDocs generation
+  The document generation is done automatically using the [YUIDocs](http://yui.github.io/yuidoc/) so make sure to check out their syntax. It is simple and generates a highquality documentation in `/docs/index.html` which you can pull up in any browser.
+  
+### Minification
+  Minification is done wtih [Uglify](https://github.com/mishoo/UglifyJS) to perform basic compression and removing of comments. The output is placed `/dist/production/{package.json.main}` except the extension is renamed to `.min.js` from `.js`.
