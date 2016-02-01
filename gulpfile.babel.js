@@ -2,6 +2,9 @@ import gulp        from 'gulp';
 import replace     from 'gulp-ext-replace';
 import stripDebug  from 'gulp-strip-debug';
 import vinylPaths  from 'vinyl-paths';
+import plumber     from 'gulp-plumber';
+import watch       from 'gulp-watch';
+import batch       from 'gulp-batch';
 import del         from 'del';
 import fs          from 'fs';
 import gulpUtil    from 'gulp-util';
@@ -62,20 +65,23 @@ gulp.task('compile', ['test'], () => {
         .pipe(gulp.dest('dist/development'));
 });
 
-gulp.task('clean', function () {
+gulp.task('clean', () => {
 	return gulp.src('docs/*', {read: false})
     .pipe(vinylPaths(del))
     .pipe(stripDebug())
-    .pipe(gulp.dest('dist'));
+    .pipe(gulp.dest('docs'));
 });
 
 gulp.task('docs', ['clean'], () => {
-  return gulp.src(['src/**/*.js'])
-    .pipe(yuidoc())
-    .pipe(gulp.dest("docs"));
+  console.log("DOCS::: ", arguments.length);
+  return gulp.src('src/**/*.js')
+    .pipe(yuidoc.parser())
+    .pipe(yuidoc.reporter())
+    .pipe(yuidoc.generator())
+    .pipe(gulp.dest('docs'));
 });
 
-gulp.task('compress', ['compile', 'docs'], () => {
+gulp.task('build', ['compile'], () => {
   return gulp.src('dist/development/*.js')
     .pipe(replace('.min.js'))
     .pipe(sourcemaps.init())
@@ -84,8 +90,12 @@ gulp.task('compress', ['compile', 'docs'], () => {
     .pipe(gulp.dest('dist/production'));
 });
 
-gulp.task('watch', () => {
-  gulp.watch(['tests/*.spec.js', 'tests/helpers/*.js', 'src/**/*.js'], ['compress']);
-});
+gulp.task('default', () => {
+  gulp.watch(['tests/*.spec.js', 'tests/helpers/*.js', 'src/**/*.js'], (event) => {
+    gulp.start('build');
+  });
 
-gulp.task('default', ['watch']);
+  gulp.watch('dist/development/*.js', (event) => {
+    gulp.start('docs');
+  });
+});
