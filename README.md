@@ -1,7 +1,22 @@
 # ES2015 & ES6 Package/Project Skeleton
 
+### Prerecs
+  1. node & npm configured and installed
+  2. phantomjs (brew install phantomjs)
+  3. ... ???
+  
+### Setup
+  1. Clone repo
+  2. cd into directory
+  3. update `package.json` (name, version, description, main, author)
+  4. `npm install`
+  5. resolve any issues.
+
+### Run Gulp Default task
+  1. `gulp`
+
 ### Project Structure
-```bash
+```text
 /
 |
 |-- /libs  #Supporting External Libs, Not to be compiled with your project.
