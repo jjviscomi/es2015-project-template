@@ -57,7 +57,7 @@
 [Gulp](http://gulpjs.com/) the prefered build system / task runner is already configured to transcompile down to js. It uses [Babel](http://babeljs.io/docs/learn-es2015/) please check it out if you are not familiar with it. This step also concats all the files specified in `'src/**/*.js'` to `/dist/development/{package.json.main}`, so make sure you update `main`. A good info page for people coming from [CoffeeScript](http://coffeescript.org/) is [Here](https://gist.github.com/danielgtaylor/0b60c2ed1f069f118562), I recommend it!
 
 ### YUIDocs generation
-  The document generation is done automatically using the [YUIDocs](http://yui.github.io/yuidoc/) so make sure to check out their syntax. It is simple and generates a highquality documentation in `/docs/index.html` which you can pull up in any browser.
+  The document generation is done automatically using the [YUIDocs](http://yui.github.io/yuidoc/) so make sure to check out their syntax. It is simple and generates a highquality documentation in `/docs/index.html` which you can pull up in any browser. [YUIDocs Syntax Refrence](http://yui.github.io/yuidoc/syntax/index.html).
 
 ### Minification
   Minification is done wtih [Uglify](https://github.com/mishoo/UglifyJS) to perform basic compression and removing of comments. The output is placed `/dist/production/{package.json.main}` except the extension is renamed to `.min.js` from `.js`.
