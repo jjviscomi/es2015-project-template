@@ -6,7 +6,7 @@
   3. ... ???
 
 ### Setup
-  1. Clone repo
+  1. fork repo
   2. cd into directory
   3. update `package.json` (name, version, description, main, author)
   4. `npm install`
