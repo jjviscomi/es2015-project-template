@@ -2,8 +2,9 @@
 
 ### Prerecs
   1. node & npm configured and installed
-  2. phantomjs (brew install phantomjs)
-  3. ... ???
+  2. npm install -g gulp 
+  3. phantomjs (brew install phantomjs, not required but recommended)
+  4. ... ???
 
 ### Setup
   1. fork repo
