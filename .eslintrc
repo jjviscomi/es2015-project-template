@@ -25,8 +25,5 @@
     "templateStrings": true,
     "unicodeCodePointEscapes": true,
     "globalReturn": true
-  },
-  "rules": {
-    "strict": 0
   }
 }

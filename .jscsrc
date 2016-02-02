@@ -1,4 +1,3 @@
 {
-    "preset": "airbnb",
-    "requireCurlyBraces": null // or false
+    "preset": "airbnb"
 }
